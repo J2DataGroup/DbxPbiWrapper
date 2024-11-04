@@ -88,6 +88,8 @@ class BaseApiHelper:
             endpointUrl = "https://api.powerbi.com/v1.0/myorg/groups"
             headers = {"Authorization": f"Bearer {tokenObject.access_token}"}
             result = requests.get(endpointUrl, headers=headers, timeout=30)
+            print(f"Workspace passed is {self.workspaceName}")
+            print(f"Result Value is {result.text}")
             jsonstring = json.loads(result.text)
             groupObject = BaseValueObjects.RootGroup.from_dict(jsonstring)
             groupValueObject = list(
