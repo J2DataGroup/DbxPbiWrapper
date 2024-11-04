@@ -54,7 +54,7 @@ class BaseApiHelper:
 
     class PbiApiHandler:
         def __init__(self,tenant, accountKey, accountSecret, WorkspaceName, datasetName):
-            self.WorkspaceName = WorkspaceName   
+            self.workspaceName = WorkspaceName   
             self.datasetName = datasetName         
             self.tenant = tenant
             self.accountKey = accountKey
