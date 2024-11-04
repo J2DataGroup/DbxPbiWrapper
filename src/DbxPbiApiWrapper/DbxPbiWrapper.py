@@ -55,9 +55,7 @@ class PbiRefreshBuilder(IPbiRefreshBuilder):
         return None
     
     def getRefreshJson(self):
-        jsonCreator = f"""{{                            
-                            "type": "Full",
-                                }}        
+        jsonCreator = f"""{{ 'type': 'Full' }}        
                         """      
         self.PbiRefresh.RefreshJson = jsonCreator
         return self

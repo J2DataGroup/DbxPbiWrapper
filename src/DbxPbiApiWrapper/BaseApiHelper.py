@@ -119,8 +119,9 @@ class BaseApiHelper:
             endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets/{dataset.id}/refreshes"
             headers = {"Authorization": f"Bearer {tokenObject.access_token}"}
             payload = payloadData
+            payload = {'type': 'Full'}
             print(f"Posting API Refresh with {payload}")
-            response = requests.post(endpointUrl, json=payload, headers=headers, timeout=30)
+            response = requests.post(endpointUrl, data=payload, headers=headers, timeout=30)
             responseObject = BaseValueObjects.ApiResponse.from_dict(response.headers)
             if response.status_code != 202:
                 print(
