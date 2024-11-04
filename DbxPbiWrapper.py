@@ -15,12 +15,7 @@ class IPbiRefreshBuilder(metaclass= ABCMeta):
     @property
     @abstractmethod
     def getSafeAadToken(self) -> None:
-        pass
-    
-    @property
-    @abstractmethod
-    def getXmlaJson(self) -> None:
-        pass
+        pass  
     
     @property
     @abstractmethod
@@ -54,12 +49,14 @@ class IPbiRefreshBuilder(metaclass= ABCMeta):
     
 
 class PbiRefreshBuilder(IPbiRefreshBuilder):
-    def __init__(self, tenant, accountKey, accountSecret):
+    def __init__(self, tenant, accountKey, accountSecret, workspaceName, datasetName):
         self.PbiRefresh = PbiRefresh()
         self.accountKey = accountKey
         self.accountSecret = accountSecret
         self.tenant = tenant
-        self.pbiApiHelper = BaseApiHelper()        
+        self.workspaceName = workspaceName
+        self.datasetName = datasetName
+        self.pbiApiHelper = BaseApiHelper.PbiApiHandler(self.workspaceName, self.datasetName)        
         self.jsonCreator = f"""{{                            
                             "type": "Full",
                                 }}        
@@ -112,7 +109,7 @@ class DbxPbiWrapper:
         builder = builder.getSafeAadToken()
         builder = builder.getGroupId()
         builder = builder.getDatasetId()
-        builder = builder.getXmlaJson()
+        builder = builder.jsonCreator()
         if(builder.FactRefreshXmla.FactRefreshJson == None):
             print("No partitions found for refresh")
             return
