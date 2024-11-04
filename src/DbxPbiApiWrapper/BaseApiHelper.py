@@ -91,9 +91,9 @@ class BaseApiHelper:
             print(f"Workspace passed is {self.workspaceName}")
             print(f"Result Value is {result.text}")
             jsonstring = json.loads(result.text)
-            groupObject = BaseValueObjects.RootGroup.from_dict(jsonstring)
+            groupObject = BaseValueObjects.RootGroup.from_dict(jsonstring)            
             groupValueObject = list(
-                filter(lambda x: (x.name.lower() == self.workspaceName().lower()), groupObject.value))
+                filter(lambda x: (x.name == self.workspaceName()), groupObject.value))
             if (len(groupValueObject)) != 1:
                 print("Expected to find group, but the group does not exists.")
                 return None
@@ -108,7 +108,7 @@ class BaseApiHelper:
             jsonstring = json.loads(result.text)
             datasetObject = BaseValueObjects.RootDataset.from_dict(jsonstring)
             datasetValueObject = list(
-                filter(lambda y: (y.name.lower() == self.datasetName), datasetObject.value))
+                filter(lambda y: (y.name == self.datasetName), datasetObject.value))
             if (len(datasetValueObject)) != 1:
                 print("Expected to find Forecast dataset, but the dataset does not exists.")
                 return None
