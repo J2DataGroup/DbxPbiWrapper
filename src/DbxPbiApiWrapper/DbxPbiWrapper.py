@@ -90,10 +90,6 @@ class PbiRefreshBuilder(IPbiRefreshBuilder):
         self.PbiRefresh.ApiResponseObject = self.pbiApiHelper.refreshDataset(self.pbiApiHelper.Token, self.pbiApiHelper.ValueGroup, self.pbiApiHelper.ValueDataset, self.pbiApiHelper.FactRefreshJson)        
         print(f"PostRequest = {self.PbiRefresh.ApiResponseObject}")
         return self
-    
-    def Results(self):
-        return self.PbiRefresh.ApiResponseObject
-        
 
 class DbxPbiWrapper:
     def __init__(self, tenant, accountKey, accountSecret, workspaceName, datasetName) -> None:
@@ -117,9 +113,8 @@ class DbxPbiWrapper:
             print("Existing refresh in progress, cannot call a new refresh on dataset.")
             raise Exception("Existing refresh in progress!!. Aborting Task.")
 
-        return    builder\
-                  .xmlaPostRequest()\
-                  .Results()     
+        builder = builder.xmlaPostRequest()
+        print(f"API Call completed with following result {builder.PbiRefresh.ApiResponseObject}")
     
 def Test():
     print("hello")
