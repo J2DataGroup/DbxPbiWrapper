@@ -30,17 +30,7 @@ class IPbiRefreshBuilder(metaclass= ABCMeta):
     @property
     @abstractmethod
     def xmlaPostRequest(self) -> None:
-        pass
-       
-    @property
-    @abstractmethod
-    def getRequestStatus(self) -> None:
-        pass
-
-    @property
-    @abstractmethod
-    def setRefreshComplete(self) -> None:
-        pass    
+        pass 
 
     @property
     @abstractmethod
@@ -63,7 +53,7 @@ class PbiRefreshBuilder(IPbiRefreshBuilder):
                         """  
         self.PbiRefresh.RefreshJson = self.jsonCreator
         print(f"RefreshJson = {self.PbiRefresh.RefreshJson}")
-        return self
+        return None
     
     def getSafeAadToken(self):
         tokenHelper = BaseApiHelper.TokenHelper(self.tenant, self.accountKey, self.accountSecret)
@@ -107,7 +97,7 @@ class DbxPbiWrapper:
         self.datasetName = datasetName
 
     def refreshPbiDataset(self):
-        builder = PbiRefreshBuilder(self.tenant, self.accountkey, self.accountsecret, self.workspaceName, self.datasetName)
+        builder = PbiRefreshBuilder(self.tenant, self.accountKey, self.accountSecret, self.workspaceName, self.datasetName)
         builder = builder.getSafeAadToken()
         builder = builder.getGroupId()
         builder = builder.getDatasetId()
@@ -125,6 +115,7 @@ class DbxPbiWrapper:
                   .Results()     
     
 def Test():
+    print("hello")
     tenant = ""
     accountKey = ""
     accountSecret = ""
@@ -132,3 +123,5 @@ def Test():
     datasetName = ""
     pbiwrapper = DbxPbiWrapper(tenant=tenant, accountKey=accountKey,accountSecret=accountSecret,workspaceName=workspaceName,datasetName=datasetName)
     pbiwrapper.refreshPbiDataset()
+
+Test()
