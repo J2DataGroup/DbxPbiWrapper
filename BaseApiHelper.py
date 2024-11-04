@@ -1,3 +1,4 @@
+from BaseValueObjects import *
 
 class BaseApiHelper:
     """Keeper of all base calls for making calls to PBI."""
@@ -31,7 +32,7 @@ class BaseApiHelper:
             print("New token generated as requested.")
             return self.TokenResponseObject
 
-        def getValidatedAADToken(self, token: TokenRequestObject, isManagementScope=False):
+        def getValidatedAADToken(self, token: BaseValueObjects.TokenRequestObject, isManagementScope=False):
             if (token is None):
                 print("Token not generated. Will create a new one.")
                 return self.getAADToken(isManagementScope)
@@ -50,8 +51,9 @@ class BaseApiHelper:
                     return self.getAADToken(isManagementScope)
 
     class PbiApiHandler:
-        def __init__(self, WorkspaceName):
-            self.WorkspaceName = WorkspaceName            
+        def __init__(self, WorkspaceName, datasetName):
+            self.WorkspaceName = WorkspaceName   
+            self.datasetName = datasetName         
 
         def retryWithBackOff(fn, args=None, kwargs=None, retries=3, backoffInSeconds=2):
             x = 0
@@ -75,7 +77,7 @@ class BaseApiHelper:
                 time.sleep(sleep)
                 x += 1
 
-        def getGroup(self, tokenObject: TokenResponseObject):
+        def getGroup(self, tokenObject: BaseValueObjects.TokenResponseObject):
             tokenHelper = BaseApiHelper.TokenHelper()
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             endpointUrl = "https://api.powerbi.com/v1.0/myorg/groups"
@@ -90,7 +92,7 @@ class BaseApiHelper:
                 return None
             return groupValueObject[0]
 
-        def getDataset(self, tokenObject: TokenResponseObject, group: ValueGroup):
+        def getDataset(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup):
             tokenHelper = BaseApiHelper.TokenHelper()
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets"
@@ -99,13 +101,13 @@ class BaseApiHelper:
             jsonstring = json.loads(result.text)
             datasetObject = BaseValueObjects.RootDataset.from_dict(jsonstring)
             datasetValueObject = list(
-                filter(lambda y: (y.name.lower() == forecastDatabase.lower()), datasetObject.value))
+                filter(lambda y: (y.name.lower() == self.datasetName), datasetObject.value))
             if (len(datasetValueObject)) != 1:
                 print("Expected to find Forecast dataset, but the dataset does not exists.")
                 return None
             return datasetValueObject[0]
 
-        def refreshDataset(self, tokenObject: TokenResponseObject, group: ValueGroup, dataset: ValueDataset,
+        def refreshDataset(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset,
                            payloadData):
             tokenHelper = BaseApiHelper.TokenHelper()
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
@@ -120,7 +122,7 @@ class BaseApiHelper:
                 return None
             return responseObject
 
-        def refreshInProgress(self, tokenObject: TokenResponseObject, group: ValueGroup, dataset: ValueDataset):
+        def refreshInProgress(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset):
             tokenHelper = BaseApiHelper.TokenHelper()
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets/{dataset.id}/refreshes?$top=10"
@@ -134,8 +136,8 @@ class BaseApiHelper:
                 return True
             return False
 
-        def refreshStatus(self, tokenObject: TokenResponseObject, group: ValueGroup, dataset: ValueDataset,
-                          apiresponse: ApiResponse):
+        def refreshStatus(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset,
+                          apiresponse: BaseValueObjects.ApiResponse):
             tokenHelper = BaseApiHelper.TokenHelper()
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             pushedRequestId = apiresponse.RequestId
