@@ -87,8 +87,7 @@ class PbiRefreshBuilder(IPbiRefreshBuilder):
         if(self.PbiRefresh.RefreshJson == None):
             print("No partitions to refresh. Skipping request to refresh.")
             return self
-        self.PbiRefresh.ApiResponseObject = self.pbiApiHelper.refreshDataset(self.pbiApiHelper.Token, self.pbiApiHelper.ValueGroup, self.pbiApiHelper.ValueDataset, self.pbiApiHelper.FactRefreshJson)        
-        print(f"PostRequest = {self.PbiRefresh.ApiResponseObject}")
+        self.PbiRefresh.ApiResponseObject = self.pbiApiHelper.refreshDataset(self.PbiRefresh.Token, self.PbiRefresh.ValueGroup, self.PbiRefresh.ValueDataset, self.PbiRefresh.RefreshJson)                
         return self
 
 class DbxPbiWrapper:
