@@ -46,7 +46,7 @@ class PbiRefreshBuilder(IPbiRefreshBuilder):
         self.tenant = tenant
         self.workspaceName = workspaceName
         self.datasetName = datasetName
-        self.pbiApiHelper = BaseApiHelper.PbiApiHandler(self.workspaceName, self.datasetName)        
+        self.pbiApiHelper = BaseApiHelper.PbiApiHandler(self.tenant,self.accountKey,self.accountSecret,self.workspaceName, self.datasetName)        
         self.jsonCreator = f"""{{                            
                             "type": "Full",
                                 }}        

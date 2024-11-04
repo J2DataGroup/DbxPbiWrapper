@@ -53,9 +53,12 @@ class BaseApiHelper:
                     return self.getAADToken(isManagementScope)
 
     class PbiApiHandler:
-        def __init__(self, WorkspaceName, datasetName):
+        def __init__(self,tenant, accountKey, accountSecret, WorkspaceName, datasetName):
             self.WorkspaceName = WorkspaceName   
             self.datasetName = datasetName         
+            self.tenant = tenant
+            self.accountKey = accountKey
+            self.accountSecret = accountSecret
 
         def retryWithBackOff(fn, args=None, kwargs=None, retries=3, backoffInSeconds=2):
             x = 0
@@ -80,7 +83,7 @@ class BaseApiHelper:
                 x += 1
 
         def getGroup(self, tokenObject: BaseValueObjects.TokenResponseObject):
-            tokenHelper = BaseApiHelper.TokenHelper()
+            tokenHelper = BaseApiHelper.TokenHelper(self.tenant,self.accountKey,self.accountSecret)
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             endpointUrl = "https://api.powerbi.com/v1.0/myorg/groups"
             headers = {"Authorization": f"Bearer {tokenObject.access_token}"}
@@ -95,7 +98,7 @@ class BaseApiHelper:
             return groupValueObject[0]
 
         def getDataset(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup):
-            tokenHelper = BaseApiHelper.TokenHelper()
+            tokenHelper = BaseApiHelper.TokenHelper(self.tenant,self.accountKey,self.accountSecret)
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets"
             headers = {"Authorization": f"Bearer {tokenObject.access_token}"}
@@ -111,7 +114,7 @@ class BaseApiHelper:
 
         def refreshDataset(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset,
                            payloadData):
-            tokenHelper = BaseApiHelper.TokenHelper()
+            tokenHelper = BaseApiHelper.TokenHelper(self.tenant,self.accountKey,self.accountSecret)
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets/{dataset.id}/refreshes"
             headers = {"Authorization": f"Bearer {tokenObject.access_token}"}
@@ -125,7 +128,7 @@ class BaseApiHelper:
             return responseObject
 
         def refreshInProgress(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset):
-            tokenHelper = BaseApiHelper.TokenHelper()
+            tokenHelper = BaseApiHelper.TokenHelper(self.tenant,self.accountKey,self.accountSecret)
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets/{dataset.id}/refreshes?$top=10"
             headers = {"Authorization": f"Bearer {tokenObject.access_token}"}
@@ -140,7 +143,7 @@ class BaseApiHelper:
 
         def refreshStatus(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset,
                           apiresponse: BaseValueObjects.ApiResponse):
-            tokenHelper = BaseApiHelper.TokenHelper()
+            tokenHelper = BaseApiHelper.TokenHelper(self.tenant,self.accountKey,self.accountSecret)
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             pushedRequestId = apiresponse.RequestId
             endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets/{dataset.id}/refreshes?$top=10"
