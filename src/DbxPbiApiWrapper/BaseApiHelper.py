@@ -88,14 +88,12 @@ class BaseApiHelper:
             endpointUrl = "https://api.powerbi.com/v1.0/myorg/groups"
             headers = {"Authorization": f"Bearer {tokenObject.access_token}"}
             result = requests.get(endpointUrl, headers=headers, timeout=30)
-            print(f"Workspace passed is {self.workspaceName}")
-            print(f"Result Value is {result.text}")
             jsonstring = json.loads(result.text)
             groupObject = BaseValueObjects.RootGroup.from_dict(jsonstring)            
             groupValueObject = list(
-                filter(lambda x: (x.name == self.workspaceName()), groupObject.value))
+                filter(lambda x: (x.name == self.workspaceName), groupObject.value))
             if (len(groupValueObject)) != 1:
-                print("Expected to find group, but the group does not exists.")
+                print("Expected to find {self.workspaceName} group, but the group does not exists.")
                 return None
             return groupValueObject[0]
 
@@ -110,7 +108,7 @@ class BaseApiHelper:
             datasetValueObject = list(
                 filter(lambda y: (y.name == self.datasetName), datasetObject.value))
             if (len(datasetValueObject)) != 1:
-                print("Expected to find Forecast dataset, but the dataset does not exists.")
+                print(f"Expected to find {self.datasetName} dataset, but the dataset does not exists.")
                 return None
             return datasetValueObject[0]
 
