@@ -99,13 +99,15 @@ class PbiRefreshBuilder(IPbiRefreshBuilder):
         
 
 class DbxPbiWrapper:
-    def __init__(self, tenant, accountKey, accountSecret) -> None:
+    def __init__(self, tenant, accountKey, accountSecret, workspaceName, datasetName) -> None:
         self.tenant = tenant
         self.accountKey = accountKey
         self.accountSecret = accountSecret
+        self.workspaceName = workspaceName
+        self.datasetName = datasetName
 
     def refreshPbiDataset(self):
-        builder = PbiRefreshBuilder(self.tenant, self.accountkey, self.accountsecret)
+        builder = PbiRefreshBuilder(self.tenant, self.accountkey, self.accountsecret, self.workspaceName, self.datasetName)
         builder = builder.getSafeAadToken()
         builder = builder.getGroupId()
         builder = builder.getDatasetId()
@@ -121,3 +123,12 @@ class DbxPbiWrapper:
         return    builder\
                   .xmlaPostRequest()\
                   .Results()     
+    
+def Test():
+    tenant = ""
+    accountKey = ""
+    accountSecret = ""
+    workspaceName = ""
+    datasetName = ""
+    pbiwrapper = DbxPbiWrapper(tenant=tenant, accountKey=accountKey,accountSecret=accountSecret,workspaceName=workspaceName,datasetName=datasetName)
+    pbiwrapper.refreshPbiDataset()
