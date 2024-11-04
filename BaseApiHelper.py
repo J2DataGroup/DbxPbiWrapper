@@ -7,9 +7,11 @@ class BaseApiHelper:
         pass
 
     class TokenHelper:
-        def __init__(self, tenant):
+        def __init__(self, tenant, accountKey, accountSecret):
             self.resource = 'https://analysis.windows.net/powerbi/api'
             self.tenant = tenant
+            self.accountKey = accountKey
+            self.accountSecret = accountSecret
             self.TokenRequestObject = None
             self.TokenResponseObject = None
 
@@ -17,7 +19,7 @@ class BaseApiHelper:
             tokenUrl = f"https://login.microsoftonline.com/{self.tenant}/oauth2/token"
 
             if (isManagementScope == False):
-                tokenParam = BaseValueObjects.TokenRequestObject()
+                tokenParam = BaseValueObjects.TokenRequestObject(self.accountKey, self.accountSecret)
                 payload = {'resource': tokenParam.resource, 'grant_type': tokenParam.grant_type,
                            'client_id': tokenParam.client_id, 'client_secret': tokenParam.client_secret}
             else:
