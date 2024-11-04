@@ -96,7 +96,7 @@ class BaseValueObjects:
         Date: str
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Root':
+        def from_dict(obj: Any) -> 'Root': # type: ignore
             _Cache_Control = str(obj.get("Cache-Control"))
             _Pragma = str(obj.get("Pragma"))
             _Content_Length = str(obj.get("Content-Length"))
@@ -118,7 +118,7 @@ class BaseValueObjects:
         value: List[BaseValueObjects.ValueRefreshStatus]
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Root':
+        def from_dict(obj: Any) -> 'Root': # type: ignore
             _odata_context = str(obj.get("@odata.context"))
             _value = [BaseValueObjects.ValueRefreshStatus.from_dict(y) for y in obj.get("value")]
             return BaseValueObjects.RootRefreshStatus(_odata_context, _value)
@@ -130,10 +130,10 @@ class BaseValueObjects:
         refreshType: str
         startTime: str    
         status: str
-        endTime: Optional[str] = None
+        endTime: Optional[str] = None # type: ignore
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Value':
+        def from_dict(obj: Any) -> 'Value': # type: ignore
             _requestId = str(obj.get("requestId"))
             _id = int(obj.get("id"))
             _refreshType = str(obj.get("refreshType"))
@@ -149,7 +149,7 @@ class BaseValueObjects:
         value: List[BaseValueObjects.ValueGroup]
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Root':
+        def from_dict(obj: Any) -> 'Root': # type: ignore
             _odata_context = str(obj.get("@odata.context"))
             _odata_count = int(obj.get("@odata.count"))
             _value = [BaseValueObjects.ValueGroup.from_dict(y) for y in obj.get("value")]
@@ -165,7 +165,7 @@ class BaseValueObjects:
         name: str
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Value':
+        def from_dict(obj: Any) -> 'Value': # type: ignore
             _id = str(obj.get("id"))
             _isReadOnly = bool(obj.get("isReadOnly"))
             _isOnDedicatedCapacity = bool(obj.get("isOnDedicatedCapcity"))
@@ -180,7 +180,7 @@ class BaseValueObjects:
         value: List[BaseValueObjects.ValueDataset]
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Root':
+        def from_dict(obj: Any) -> 'Root': # type: ignore
             _odata_context = str(obj.get("@odata.context"))
             _value = [BaseValueObjects.ValueDataset.from_dict(y) for y in obj.get("value")]
             return BaseValueObjects.RootDataset(_odata_context, _value)
@@ -206,7 +206,7 @@ class BaseValueObjects:
         users: List[object]
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Value':
+        def from_dict(obj: Any) -> 'Value': # type: ignore
             _id = str(obj.get("id"))
             _name = str(obj.get("name"))
             _expressions = None
