@@ -87,6 +87,7 @@ class PbiRefreshBuilder(IPbiRefreshBuilder):
         if(self.PbiRefresh.RefreshJson == None):
             print("No partitions to refresh. Skipping request to refresh.")
             return self
+        print(f"Refreshing GroupId: {self.PbiRefresh.ValueGroup.id} and DatasetId: {self.PbiRefresh.ValueDataset.id}")
         self.PbiRefresh.ApiResponseObject = self.pbiApiHelper.refreshDataset(self.PbiRefresh.Token, self.PbiRefresh.ValueGroup, self.PbiRefresh.ValueDataset, self.PbiRefresh.RefreshJson)                
         return self
 
