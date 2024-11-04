@@ -8,7 +8,7 @@ class PbiRefresh:
         self.ValueDataset = None
         self.ApiResponseObject = None
         self.RefreshStatus = None        
-        self.RefreshJson = None
+        self.RefreshJson = None        
         
 class IPbiRefreshBuilder(metaclass= ABCMeta):
     
@@ -36,6 +36,11 @@ class IPbiRefreshBuilder(metaclass= ABCMeta):
     @abstractmethod
     def existingRefresh(self) -> None:
         pass    
+
+    @property
+    @abstractmethod
+    def getRefreshJson(self) -> None:
+        pass    
     
 
 class PbiRefreshBuilder(IPbiRefreshBuilder):
@@ -47,13 +52,15 @@ class PbiRefreshBuilder(IPbiRefreshBuilder):
         self.workspaceName = workspaceName
         self.datasetName = datasetName
         self.pbiApiHelper = BaseApiHelper.PbiApiHandler(self.tenant,self.accountKey,self.accountSecret,self.workspaceName, self.datasetName)        
-        self.jsonCreator = f"""{{                            
+        return None
+    
+    def getRefreshJson(self):
+        jsonCreator = f"""{{                            
                             "type": "Full",
                                 }}        
-                        """  
-        self.PbiRefresh.RefreshJson = self.jsonCreator
-        print(f"RefreshJson = {self.PbiRefresh.RefreshJson}")
-        return None
+                        """      
+        self.PbiRefresh.RefreshJson = jsonCreator
+        return self
     
     def getSafeAadToken(self):
         tokenHelper = BaseApiHelper.TokenHelper(self.tenant, self.accountKey, self.accountSecret)
@@ -101,8 +108,8 @@ class DbxPbiWrapper:
         builder = builder.getSafeAadToken()
         builder = builder.getGroupId()
         builder = builder.getDatasetId()
-        builder = builder.jsonCreator()
-        if(builder.FactRefreshXmla.FactRefreshJson == None):
+        builder = builder.getRefreshJson()
+        if(builder.PbiRefresh.RefreshJson == None):
             print("No partitions found for refresh")
             return
         existingRunning = builder.existingRefresh()
