@@ -61,7 +61,7 @@ class BaseValueObjects:
         access_token: str
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Root':
+        def from_dict(obj: Any) -> 'Root': # type: ignore
             _token_type = str(obj.get("token_type"))
             _expires_in = str(obj.get("expires_in"))
             _ext_expires_in = str(obj.get("ext_expires_in"))
@@ -75,7 +75,7 @@ class BaseValueObjects:
         JobId: str
 
         @staticmethod
-        def from_dict(obj: Any) -> 'Root':
+        def from_dict(obj: Any) -> 'Root': # type: ignore
             _JobIds = ast.literal_eval(str(obj.get("JobIds")))
             return _JobIds[0]
 
