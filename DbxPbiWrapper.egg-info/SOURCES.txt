@@ -1,0 +1,6 @@
+README.md
+setup.py
+DbxPbiWrapper.egg-info/PKG-INFO
+DbxPbiWrapper.egg-info/SOURCES.txt
+DbxPbiWrapper.egg-info/dependency_links.txt
+DbxPbiWrapper.egg-info/top_level.txt
