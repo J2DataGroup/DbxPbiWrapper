@@ -13,7 +13,7 @@ setup(
     description="Dbx to Pbi Wrapper",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    version="0.0.1",
+    version="0.0.5",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
