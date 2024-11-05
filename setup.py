@@ -7,7 +7,7 @@ with open("requirements.txt") as f:
     required = f.read().splitlines()
 
 setup(
-    name="DbxPbiWrapper",
+    name="DbxPbiApiWrapper",
     author="J2DataGroup",
     author_email="info@j2datagroup.com",
     description="Dbx to Pbi Wrapper",
