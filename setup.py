@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="ReservesPackage",
+    name="DbxPbiWrapper",
     author="J2DataGroup",
     author_email="info@j2datagroup.com",
     description="Dbx to Pbi Wrapper",
