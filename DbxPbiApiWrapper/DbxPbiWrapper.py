@@ -114,14 +114,3 @@ class DbxPbiWrapper:
         builder = builder.xmlaPostRequest()
         print(f"API Call completed with following result {builder.PbiRefresh.ApiResponseObject}")
     
-def Test():
-    print("hello")
-    tenant = ""
-    accountKey = ""
-    accountSecret = ""
-    workspaceName = ""
-    datasetName = ""
-    pbiwrapper = DbxPbiWrapper(tenant=tenant, accountKey=accountKey,accountSecret=accountSecret,workspaceName=workspaceName,datasetName=datasetName)
-    pbiwrapper.refreshPbiDataset()
-
-Test()
