@@ -1,5 +1,5 @@
-from BaseValueObjects import *
-from BaseApiHelper import *
+from DbxPbiApiWrapper.BaseValueObjects import *
+from DbxPbiApiWrapper.BaseApiHelper import *
 
 class PbiRefresh:
     def __init__(self):
