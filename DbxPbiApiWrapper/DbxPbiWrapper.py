@@ -10,6 +10,7 @@ class PbiDatasetValueObject:
         self.ValueDatasets = None
         self.ApiResponseObject = None
         self.RefreshStatus = None        
+        self.RefreshHistory = None        
         self.RefreshJson = None   
         self.ValueDatasetUsers = None     
         
@@ -22,12 +23,12 @@ class IPbiDatasetValueBuilder(metaclass= ABCMeta):
     
     @property
     @abstractmethod
-    def getGroupId(self, groupName) -> None:
+    def getGroup(self, groupName) -> None:
         pass
     
     @property
     @abstractmethod
-    def getDatasetId(self, datasetName) -> None:
+    def getDataset(self, datasetName) -> None:
         pass
     
     @property
@@ -48,6 +49,11 @@ class IPbiDatasetValueBuilder(metaclass= ABCMeta):
     @property
     @abstractmethod
     def getGroups(self) -> None:
+        pass  
+
+    @property
+    @abstractmethod
+    def getRefreshHistory(self,groupName,datasetName) -> None:
         pass   
 
     @property
@@ -84,7 +90,7 @@ class PbiDatasetValueBuilder(IPbiDatasetValueBuilder):
         self.PbiDatasetValueObject.ValueGroups = self.pbiApiHelper.getGroup(self.PbiDatasetValueObject.Token, groupName = None)        
         return self
 
-    def getGroupId(self, groupName):
+    def getGroup(self, groupName):
         self.PbiDatasetValueObject.ValueGroup = self.pbiApiHelper.getGroup(self.PbiDatasetValueObject.Token, groupName = groupName)
         print(f"GetGroup = {self.PbiDatasetValueObject.ValueGroup}")
         return self
@@ -93,7 +99,7 @@ class PbiDatasetValueBuilder(IPbiDatasetValueBuilder):
         self.PbiDatasetValueObject.ValueDatasets = self.pbiApiHelper.getDataset(self.PbiDatasetValueObject.Token, self.PbiDatasetValueObject.ValueGroup, datasetName=None)
         return self
 
-    def getDatasetId(self, datasetName):
+    def getDataset(self, datasetName):
         self.PbiDatasetValueObject.ValueDataset = self.pbiApiHelper.getDataset(self.PbiDatasetValueObject.Token, self.PbiDatasetValueObject.ValueGroup, datasetName=datasetName)
         print(f"GetDataset = {self.PbiDatasetValueObject.ValueDataset}")
         return self
@@ -113,6 +119,10 @@ class PbiDatasetValueBuilder(IPbiDatasetValueBuilder):
     
     def getUsersInDataset(self):
         self.PbiDatasetValueObject.ValueDatasetUsers = self.pbiApiHelper.getUsersInDataset(self.PbiDatasetValueObject.Token, self.PbiDatasetValueObject.ValueGroup, self.PbiDatasetValueObject.ValueDataset)
+        return self
+    
+    def getRefreshHistory(self):
+        self.PbiDatasetValueObject.RefreshHistory = self.pbiApiHelper.getRefreshHistory(self.PbiDatasetValueObject.Token, self.PbiDatasetValueObject.ValueGroup, self.PbiDatasetValueObject.ValueDataset)
         return self
 
 class DbxPbiDatasetWrapper:
@@ -139,6 +149,13 @@ class DbxPbiDatasetWrapper:
         builder = builder.xmlaPostRequest()
         print(f"API Call completed with following result {builder.PbiRefresh.ApiResponseObject}")
     
+    def getDatasetsInWorkspace(self, workspaceName):
+        builder = PbiDatasetValueBuilder(self.tenant, self.accountKey, self.accountSecret)
+        builder = builder.getSafeAadToken()
+        builder = builder.getGroupId(workspaceName)
+        builder =  builder.getDataset(workspaceName)
+        return builder.PbiDatasetValueObject.ValueDataset
+    
     def getAllDatasetsInWorkspace(self, workspaceName):
         builder = PbiDatasetValueBuilder(self.tenant, self.accountKey, self.accountSecret)
         builder = builder.getSafeAadToken()
@@ -159,3 +176,11 @@ class DbxPbiDatasetWrapper:
         builder = builder.getDatasetId(datasetName)
         builder = builder.getUsersInDataset()
         return builder.PbiDatasetValueObject.ValueDatasetUsers
+    
+    def getDatasetRefreshHistory(self, workspaceName, datasetName):
+        builder = PbiDatasetValueBuilder(self.tenant, self.accountKey, self.accountSecret)
+        builder = builder.getSafeAadToken()
+        builder = builder.getGroupId(workspaceName)
+        builder = builder.getDatasetId(datasetName)
+        builder = builder.getRefreshHistory()
+        return builder.PbiDatasetValueObject.RefreshHistory

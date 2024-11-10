@@ -135,7 +135,7 @@ class BaseApiHelper:
                 return None
             return responseObject
 
-        def refreshInProgress(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset):
+        def getRefreshHistory(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset, historyCount = 10):
             tokenHelper = BaseApiHelper.TokenHelper(self.tenant,self.accountKey,self.accountSecret)
             tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
             endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets/{dataset.id}/refreshes?$top=10"
@@ -143,28 +143,9 @@ class BaseApiHelper:
             result = requests.get(endpointUrl, headers=headers, timeout=30)
             jsonstring = json.loads(result.text)
             print(f"Checking If existing request is in progress.")
-            datasetObject = BaseValueObjects.RootRefreshStatus.from_dict(jsonstring)
-            datasetValueObject = list(filter(lambda y: (y.status == "Unknown"), datasetObject.value))
-            if (len(datasetValueObject)) > 0:
-                return True
-            return False
-
-        def refreshStatus(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset,
-                          apiresponse: BaseValueObjects.ApiResponse):
-            tokenHelper = BaseApiHelper.TokenHelper(self.tenant,self.accountKey,self.accountSecret)
-            tokenObject = tokenHelper.getValidatedAADToken(tokenObject, False)
-            pushedRequestId = apiresponse.RequestId
-            endpointUrl = f"https://api.powerbi.com/v1.0/myorg/groups/{group.id}/datasets/{dataset.id}/refreshes?$top=10"
-            headers = {"Authorization": f"Bearer {tokenObject.access_token}"}
-            result = requests.get(endpointUrl, headers=headers, timeout=30)
-            jsonstring = json.loads(result.text)
-            print(f"Checking Status for Request {pushedRequestId}")
-            datasetObject = BaseValueObjects.RootRefreshStatus.from_dict(jsonstring)
-            datasetValueObject = list(filter(lambda y: (y.requestId == pushedRequestId), datasetObject.value))
-            if (len(datasetValueObject)) != 1:
-                print("Expected to find refresh status, but cannot find it.")
-                return None
-            return datasetValueObject[0]
+            rootRefreshHistory = BaseValueObjects.RootRefreshStatus.from_dict(jsonstring)
+            rootRefreshHistoryValueObject = list(rootRefreshHistory.value)
+            return rootRefreshHistoryValueObject
 
         def getUsersInDataset(self, tokenObject: BaseValueObjects.TokenResponseObject, group: BaseValueObjects.ValueGroup, dataset: BaseValueObjects.ValueDataset):
             tokenHelper = BaseApiHelper.TokenHelper(self.tenant,self.accountKey,self.accountSecret)
