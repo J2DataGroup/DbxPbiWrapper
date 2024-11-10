@@ -1,5 +1,5 @@
-from BaseValueObjects import *
-from BaseApiHelper import *
+from DbxPbiWrapper.BaseValueObjects import *
+from DbxPbiWrapper.BaseApiHelper import *
 
 class PbiDatasetValueObject:
     def __init__(self):

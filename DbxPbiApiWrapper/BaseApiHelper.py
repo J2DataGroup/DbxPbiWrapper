@@ -1,4 +1,4 @@
-from BaseValueObjects import *
+from DbxPbiWrapper.BaseValueObjects import *
 
 class BaseApiHelper:
     """Keeper of all base calls for making calls to PBI."""
